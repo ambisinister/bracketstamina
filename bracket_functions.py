@@ -5,7 +5,7 @@ import collections
 from collections import namedtuple, deque
 import numpy as np
 
-from models import *
+from models import Model
 
 class SingleEliminationBracket:
     def __init__(self, players):
@@ -71,3 +71,29 @@ def run_tournaments(num_tournaments, players):
     probabilities = {player: count / num_tournaments for player, count in counter.items()}
     
     return probabilities
+
+def generate_training_data(num_tournaments, num_players, dqn_player_stamina):
+    training_data = []
+
+    for _ in range(num_tournaments):
+        stamina_values = [i+1 for i in range(num_players - 1)]
+        stamina_values.append(dqn_player_stamina)
+        players = [Player(stamina, Model(), f"Player {i}") for i, stamina in enumerate(stamina_values, 1)]
+
+        bracket = SingleEliminationBracket(players)
+        winner = bracket.play_tournament()
+
+        for player, match_history in bracket.match_history.items():
+            if player == winner:
+                reward = 1
+            else:
+                reward = 0
+
+            for match in match_history:
+                state = match['state']
+                action = match['roll']
+                next_state = match['next_state']
+                done = match['done']
+                training_data.append((state, action, reward, next_state, done))
+
+    return training_data
