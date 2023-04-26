@@ -31,6 +31,7 @@ if __name__ == '__main__':
     #players = [Player(i + 1, Model(), f"Player {i + 1}") for i in range(16)]
     players = [Player(15, Model(), f"Player {i + 1}") for i in range(16)]
     players[-1] = dqn_player
+    #players[-1] = Player(22, Model(), "Player of interest")
     print([x.stamina for x in players])
 
     probabilities = run_tournaments(num_tournaments, players)
