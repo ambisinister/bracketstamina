@@ -31,7 +31,9 @@ if __name__ == '__main__':
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     dqn = torch.load('./dqn_weights.pth')
     dqn_player = DQNPlayer(15, dqn.to(device), "DQN Player")
+    dqn_player.stamina = 0.536
+    print(use_dqn(dqn_player, 0.536, 0.797, 2, 16))
 
-    for i in range(4):
-        visualize_policy(dqn_player, i, 16)
+    #for i in range(4):
+    #    visualize_policy(dqn_player, i, 16)
     #visualize_policy(dqn_player, 4, 16)
